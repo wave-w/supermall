@@ -1,12 +1,16 @@
 <template>
-  <div><h2>购物车</h2></div>
+  <div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'cars',
+  components :{
+  }
 }
 </script>
 
 <style scoped>
+
 </style>
