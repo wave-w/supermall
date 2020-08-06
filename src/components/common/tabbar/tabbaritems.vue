@@ -27,18 +27,19 @@ export default {
 <style scoped>
  .tabbar-items{
    flex: 1;
-   text-align: center;
-   height: 49px;
-   font-size: 14px;
+    text-align: center;
+    height: 49px;
+    font-size: 14px;
+    color:black;
  }
  .tabbar-items img{
-     width: 24px;
-     height: 24px;
-     margin-top: 3px;
-     margin-bottom: 2px;
-vertical-align: middle;
+      width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin: 4px 0 2px 0;
  }
  .active{
-     color: red;
+      color:coral;
+    font-weight: bolder;
  }
 </style>
