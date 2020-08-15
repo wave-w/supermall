@@ -5,7 +5,6 @@
   </div>
   </div>
 </template>
-
 <script>
 import Bsscroll from 'better-scroll'
 export default {
@@ -33,7 +32,7 @@ export default {
       }),
       this.scroll.on('scroll',(position)=>{
         this.$emit('scroll',position)
-      }),
+      })
       this.scroll.on('pullingUp',()=>{
         this.$emit('pullingUp')
       })
@@ -44,6 +43,9 @@ export default {
       },
       finishPullUp(){
           this.scroll.finishPullUp()
+      },
+      refresh(){
+        this.scroll.refresh()
       }
   },
 }

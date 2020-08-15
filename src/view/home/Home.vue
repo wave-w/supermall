@@ -3,12 +3,14 @@
     <nav-bar class="home-navbar">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll" :probe-type='3' @scroll='scrollclick'  :pull-up-load='true' @pullingUp="pullingUp">
-      <home-swiper :banners='banners'></home-swiper>
+      <tab-control :tabcontrol="['流行','新款','精选']" @indexclick='indexclick' ref="tabcontrol1" class="tabcontrol" v-show="positiony<-taboffsettop"></tab-control>
+    <scroll class="content" ref="scroll" :probe-type='3' @scroll='scrollclick' :pullUpLoad='true'
+      @pullingUp='pullingUp'>
+      <home-swiper :banners='banners' @imgload='imgload'></home-swiper>
       <homecommer-view :recommends="recommends"></homecommer-view>
       <home-recommend></home-recommend>
-      <tab-control :tabcontrol="['流行','新款','精选']" class="tabcontrol" @indexclick='indexclick'></tab-control>
-      <goods :good="showtype"></goods>  
+      <tab-control :tabcontrol="['流行','新款','精选']" @indexclick='indexclick' ref="tabcontrol"></tab-control>
+      <goods :good="showtype"></goods>
     </scroll>
     <back-top @click.native="backclick" v-show="positiony<-1500"></back-top>
   </div>
@@ -22,6 +24,9 @@
   import Goods from "components/content/goods/Goods"
   import Scroll from "components/common/betterscroll/Scroll"
   import BackTop from "components/content/BackTop/BackTop"
+  import {
+    debounce
+  } from 'common/util'
   import {
     HomeMultidata,
     HomeGood
@@ -58,7 +63,8 @@
 
         },
         currindex: 'pop',
-        positiony: 0
+        positiony: 0,
+        taboffsettop: 0
       }
 
     },
@@ -68,7 +74,17 @@
         this.getHomeGood('new'),
         this.getHomeGood('sell')
     },
+    mounted() {
+      const refresh = debounce(this.$refs.scroll.refresh, 500)
+      this.$bus.$on("ItemImageLoad", () => {
+          refresh()
+        })
+
+    },
     methods: {
+      imgload() {
+     this.taboffsettop = this.$refs.tabcontrol.$el.offsetTop
+      },
       getHomeMultidata() {
         HomeMultidata().then(res => {
           this.banners = res.data.banner.list;
@@ -80,7 +96,7 @@
         HomeGood(type, page).then(res => {
           this.goods[type].list.push(...res.data.list)
           this.goods[type].page += 1
-          this.$refs.scroll.finishPullUp()
+          this.$refs.scroll.finishPullUp() //解决上拉加载更多只执行一次
         })
       },
       indexclick(index) {
@@ -96,14 +112,16 @@
           case 2:
             this.currindex = 'sell'
         }
+        this.$refs.tabcontrol1.currindex=index
+        this.$refs.tabcontrol.currindex=index
       },
-      backclick(){
-        this.$refs.scroll.scrollTo(0,0)
+      backclick() {
+        this.$refs.scroll.scrollTo(0, 0)
       },
-      scrollclick(position){
-       this.positiony=position.y
+      scrollclick(position) {
+        this.positiony = position.y
       },
-      pullingUp(){
+      pullingUp() {
         this.getHomeGood(this.currindex)
         this.$refs.scroll.scroll.refresh()
       }
@@ -118,26 +136,21 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
-    height: 100vh;
+/*     padding-top: 44px;
+ */    height: 100vh;
     position: relative;
   }
 
   .home-navbar {
     background-color: var(--color-tint);
     color: #fff;
-    position: fixed;
+ /*    position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    z-index: 9;
+    z-index: 9; */
   }
 
-  .tabcontrol {
-    position: sticky;
-    top: 44px;
-    z-index: 7;
-  }
 
   .content {
     overflow: hidden;
@@ -147,9 +160,15 @@
     right: 0;
     left: 0;
   }
-/*   .content{
+
+  /*   .content{
     height: calc(100%-93px);
     overflow: hidden;
     margin-top: 44px;
   } */
+  .tabcontrol{
+    position: relative;
+    z-index: 9;
+  }
+ 
 </style>

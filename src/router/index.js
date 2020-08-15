@@ -6,7 +6,7 @@ const Home = ()=> import('../view/home/Home')
 const About = ()=> import('../view/about/About')
 const Cars = ()=> import('../view/cars/Cars')
 const Me = ()=> import('../view/me/Me')
-
+const Detail = ()=> import('../view/detail/Detail')
 const routes = [
   { path: '/', redirect: '/home'},
 { 
@@ -24,6 +24,10 @@ const routes = [
    {
       path: '/me', 
       component: Me
+     },
+     {
+      path: '/detail/:iid', 
+      component: Detail
      }
 ]
  const router = new Router({

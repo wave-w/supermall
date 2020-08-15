@@ -1,12 +1,11 @@
 <template>
-  <div class="goods-item">
-  <a :href="goodsitem.link">
-    <img :src="goodsitem.show.img" alt="">
+  <div class="goods-item" @click="ltemclick">
+    <img v-lazy="showimage" alt="" @load="imgload">
     <div class="goods-info">
       <p>{{goodsitem.title}}</p>
       <span class="price">{{goodsitem.price}}</span>
       <span class="collect">{{goodsitem.cfav}}</span>
-    </div></a>
+    </div>
   </div>
 </template>
 
@@ -20,6 +19,23 @@
           return {}
         }
       }
+    },
+    computed: {
+      showimage(){
+      return  this.goodsitem.image ||this.goodsitem.show.img
+      }
+    },
+  methods: {
+      imgload(){
+      if(this.$route.path=='/home')
+      { this.$bus.$emit("ItemImageLoad")
+      }else if(this.$route.path=='/detailk'){
+         this.$bus.$emit("detailItemImageLoad")
+      }
+  },
+  ltemclick(){
+    this.$router.push('/detail/'+this.goodsitem.iid)
+  }
     }
   }
 </script>
