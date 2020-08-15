@@ -1,8 +1,7 @@
 import axios from 'axios'
 export function request(config) {
   const instance = axios.create({
-    baseURL: "http://123.207.32.32:8000",
-   
+    baseURL: "http://123.207.32.32:8000",//接口已经更改，加coderwhy老师微信获取新接口
 
     timeout: 5000
   })
